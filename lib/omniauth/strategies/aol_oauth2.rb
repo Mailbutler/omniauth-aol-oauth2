@@ -13,7 +13,7 @@ module OmniAuth
              authorize_url: '/oauth2/request_auth',
              token_url: '/oauth2/get_token'
 
-      uid { access_token.params['xoauth_aol_guid'] }
+      uid { raw_profile_info['sub'] }
 
       info do
         {
