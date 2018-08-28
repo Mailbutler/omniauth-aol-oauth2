@@ -9,7 +9,7 @@ module OmniAuth
       option :name, 'aol_oauth2'
 
       option :client_options,
-             site: 'https://api.login.yahoo.com',
+             site: 'https://api.login.aol.com',
              authorize_url: '/oauth2/request_auth',
              token_url: '/oauth2/get_token'
 
@@ -17,14 +17,8 @@ module OmniAuth
 
       info do
         {
-          email: email,
-          name: raw_profile_info['givenName'],
-          nickname: raw_profile_info['nickname'],
-          location: raw_profile_info['location'],
-          image: raw_profile_info.dig('image', 'imageUrl'),
-          urls: {
-            Profile: raw_profile_info['profileUrl']
-          },
+          email: raw_profile_info['email'],
+          name: raw_profile_info['name'],
           extra: {
             raw_info: raw_profile_info
           }
@@ -47,16 +41,7 @@ module OmniAuth
       end
 
       def raw_profile_info
-        raw_profile_info_url = "https://social.yahooapis.com/v1/user/#{uid}/profile?format=json"
-        @raw_profile_info ||= access_token.get(raw_profile_info_url).parsed['profile']
-      end
-
-      def email
-        return nil unless raw_profile_info['emails']&.is_a?(Array)
-        primary_email_hash = raw_profile_info['emails'].select { |email_info| email_info['primary'] }.first
-        some_email_hash = raw_profile_info['emails'].select { |email_info| email_info['handle'].include?('@') }.first
-        email_hash = primary_email_hash || some_email_hash || {}
-        email_hash['handle']
+        @raw_profile_info ||= access_token.get('https://api.login.aol.com/openid/v1/userinfo').parsed
       end
     end
   end

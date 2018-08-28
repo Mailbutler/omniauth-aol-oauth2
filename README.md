@@ -24,5 +24,5 @@ AOL returns an access_token, a refresh_token, and an expiration time for the acc
 
 
 ## TODO ##
-- Handle failure cases. (https://developer.yahoo.com/oauth2/guide/errors/)
+- Handle failure cases.
 - Test something. Anything.
