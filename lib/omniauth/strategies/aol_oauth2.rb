@@ -38,7 +38,13 @@ module OmniAuth
       end
 
       def raw_profile_info
+        log(:info, access_token.to_hash)
         @raw_profile_info ||= access_token.get('https://api.login.aol.com/openid/v1/userinfo').parsed
+        log(:info, @raw_profile_info)
+        @raw_profile_info
+      rescue StandardError => e
+        log(:error, e)
+        raise
       end
     end
   end
