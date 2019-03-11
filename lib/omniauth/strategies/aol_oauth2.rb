@@ -33,11 +33,16 @@ module OmniAuth
         verifier = request.params['code']
         auth = "Basic #{Base64.strict_encode64("#{options.client_id}:#{options.client_secret}")}"
 
-        client.auth_code.get_token(verifier, { headers: { 'Authorization': auth }, redirect_uri: callback_url }.merge(token_params.to_hash(symbolize_keys: true)), deep_symbolize(options.auth_token_params))
+        params = { headers: { 'Authorization': auth }, redirect_uri: callback_url }.merge(token_params.to_hash(symbolize_keys: true))
+        Rails.logger.warn(params)
+
+        client.auth_code.get_token(verifier, params, deep_symbolize(options.auth_token_params))
       end
 
       def raw_profile_info
         @raw_profile_info ||= access_token.get('https://api.login.aol.com/openid/v1/userinfo').parsed
+        Rails.logger.warn(@raw_profile_info)
+        @raw_profile_info
       end
     end
   end
