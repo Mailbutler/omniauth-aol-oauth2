@@ -30,14 +30,10 @@ module OmniAuth
       end
 
       def build_access_token
-        verifier_code = request.params['code']
-
+        verifier = request.params['code']
         auth = "Basic #{Base64.strict_encode64("#{options.client_id}:#{options.client_secret}")}"
 
-        client.get_token(
-          { redirect_uri: callback_url, code: verifier_code, grant_type: 'authorization_code', headers: { 'Authorization': auth } }
-          .merge(token_params.to_hash(symbolize_keys: true)), deep_symbolize(options.auth_token_params)
-        )
+        client.auth_code.get_token(verifier, { headers: { 'Authorization': auth }, redirect_uri: callback_url }.merge(token_params.to_hash(symbolize_keys: true)), deep_symbolize(options.auth_token_params))
       end
 
       def raw_profile_info
